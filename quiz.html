@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Answer Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .user-info {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .user-info label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .user-info input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .user-info input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-number {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            color: #555;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Quiz Questions</h1>
+        
+        <form th:action="@{/submit}" method="post" id="quizForm">
+            <div class="user-info">
+                <label for="userName">Your Name:</label>
+                <input type="text" id="userName" name="userName" required placeholder="Enter your full name">
+            </div>
+            
+            <div th:each="question, iterStat : ${questions}" class="question-card">
+                <div class="question-number">Question <span th:text="${iterStat.count}"></span> of <span th:text="${questions.size()}"></span></div>
+                <div class="question-text" th:text="${question.questionText}"></div>
+                
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" th:id="'q' + ${question.id} + 'a'" 
+                               th:name="'answers[' + ${question.id} + ']'" value="A" required>
+                        <label th:for="'q' + ${question.id} + 'a'" th:text="'A. ' + ${question.optionA}"></label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" th:id="'q' + ${question.id} + 'b'" 
+                               th:name="'answers[' + ${question.id} + ']'" value="B">
+                        <label th:for="'q' + ${question.id} + 'b'" th:text="'B. ' + ${question.optionB}"></label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" th:id="'q' + ${question.id} + 'c'" 
+                               th:name="'answers[' + ${question.id} + ']'" value="C">
+                        <label th:for="'q' + ${question.id} + 'c'" th:text="'C. ' + ${question.optionC}"></label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" th:id="'q' + ${question.id} + 'd'" 
+                               th:name="'answers[' + ${question.id} + ']'" value="D">
+                        <label th:for="'q' + ${question.id} + 'd'" th:text="'D. ' + ${question.optionD}"></label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Quiz</button>
+        </form>
+    </div>
+</body>
+</html>
